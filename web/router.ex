@@ -17,6 +17,7 @@ defmodule TodoApi.Router do
     pipe_through :api
 
     resources "/users", UserController, only: [:create]
+    post "/authentication", AuthenticationController, :create
   end
 
   # Other scopes may use custom stacks.
