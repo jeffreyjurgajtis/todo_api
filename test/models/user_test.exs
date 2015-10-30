@@ -14,7 +14,7 @@ defmodule TodoApi.UserTest do
   test "validations require password to be a minimum of 5 characters" do
     invalid_attrs = %{email: "email@example.com", password: "asdf"}
     changeset = User.changeset(%User{}, invalid_attrs)
-    {message, count} = changeset.errors[:password]
+    {message, _count} = changeset.errors[:password]
 
     assert message == "should be at least %{count} characters"
   end

@@ -1,9 +1,6 @@
 defmodule TodoApi.UserControllerTest do
   use TodoApi.ConnCase
 
-  alias TodoApi.User
-  alias TodoApi.Registration
-
   @user_params %{email: "email@example.com", password: "password"}
 
   setup do
