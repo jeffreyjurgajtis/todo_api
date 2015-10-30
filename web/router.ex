@@ -14,7 +14,9 @@ defmodule TodoApi.Router do
   end
 
   scope "/", TodoApi do
-    pipe_through :browser # Use the default browser stack
+    pipe_through :api
+
+    resources "/users", UserController, only: [:create]
   end
 
   # Other scopes may use custom stacks.
