@@ -36,6 +36,7 @@ defmodule TodoApi.Mixfile do
      {:phoenix_html, "~> 2.1"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:comeonin, "~> 1.0"},
+     {:cors_plug, "~> 0.1.4"},
      {:cowboy, "~> 1.0"}]
   end
 
