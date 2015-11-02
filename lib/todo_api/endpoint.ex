@@ -35,6 +35,6 @@ defmodule TodoApi.Endpoint do
     key: "_todo_api_key",
     signing_salt: "o5eDUq7i"
 
-  plug CORSPlug, [origin: "http://localhost:8080"]
+  plug CORSPlug, [origin: "http://localhost:8080", headers: ["X-Auth-Token"]]
   plug TodoApi.Router
 end
