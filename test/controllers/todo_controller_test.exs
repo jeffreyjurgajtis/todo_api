@@ -21,7 +21,7 @@ defmodule TodoApi.TodoControllerTest do
 
   test "index returns todo JSON on success", %{conn: conn} do
     {:ok, user} = insert_user
-    %Todo{content: "content", user_id: user.id} |> Repo.insert!
+    insert_todo(user.id)
 
     json = conn
             |> put_req_header("x-auth-token", user.authentication_token)
@@ -71,12 +71,12 @@ defmodule TodoApi.TodoControllerTest do
             |> post(todo_path(conn, :create), todo: %{content: ""})
             |> json_response(422)
 
-    assert(json["errors"])
+    assert(json["errors"] != %{})
   end
 
   test "show returns 200/todo JSON" do
     {:ok, user} = insert_user
-    todo = %Todo{content: "content", user_id: user.id} |> Repo.insert!
+    todo = insert_todo(user.id)
 
     json = conn
             |> put_req_header("x-auth-token", user.authentication_token)
@@ -88,5 +88,37 @@ defmodule TodoApi.TodoControllerTest do
       "content" => todo.content,
       "completed_at" => todo.completed_at
     })
+  end
+
+  test "update returns 200/todo JSON on success", %{conn: conn} do
+    {:ok, user} = insert_user
+    todo = insert_todo(user.id)
+
+    json = conn
+            |> put_req_header("x-auth-token", user.authentication_token)
+            |> put(todo_path(conn, :update, todo.id), todo: %{content: "new"})
+            |> json_response(200)
+
+    assert(json["todo"] == %{
+      "id" => todo.id,
+      "content" => "new",
+      "completed_at" => todo.completed_at
+    })
+  end
+
+  test "update returns 422/error JSON on failure", %{conn: conn} do
+    {:ok, user} = insert_user
+    todo = insert_todo(user.id)
+
+    json = conn
+            |> put_req_header("x-auth-token", user.authentication_token)
+            |> put(todo_path(conn, :update, todo.id), todo: %{content: ""})
+            |> json_response(422)
+
+    assert(json["errors"] != %{})
+  end
+
+  defp insert_todo(user_id) do
+    %Todo{content: "content", user_id: user_id} |> Repo.insert!
   end
 end

@@ -39,6 +39,20 @@ defmodule TodoApi.TodoController do
     render(conn, "show.json", todo: todo)
   end
 
+  def update(conn, %{"id" => id, "todo" => todo_params}) do
+    todo = Repo.get!(Todo, id)
+    changeset = Todo.changeset(todo, todo_params)
+
+    case Repo.update(changeset) do
+      {:ok, todo} ->
+        render(conn, "show.json", todo: todo)
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(ChangesetView, "error.json", changeset: changeset)
+    end
+  end
+
   defp authenticate_user(conn, _) do
     authentication_token = conn.req_headers["x-auth-token"]
 
