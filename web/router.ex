@@ -18,6 +18,7 @@ defmodule TodoApi.Router do
 
     resources "/users", UserController, only: [:create]
     post "/authentication", AuthenticationController, :create
+    resources "/todos", TodoController, only: [:index]
   end
 
   # Other scopes may use custom stacks.
