@@ -17,9 +17,15 @@ defmodule TodoApi.AuthenticationTest do
     assert user.email == result.email
   end
 
-  test "returns {:error} when an invalid token is given" do
+  test "returns {:error, message} when an invalid token is given" do
     error_msg = "cannot find user by authentication token"
 
     assert {:error, error_msg} == Authentication.get_user("invalid-token")
+  end
+
+  test "returns {:error, message} when an invalid token is missing" do
+    error_msg = "a valid authentication token is required"
+
+    assert {:error, error_msg} == Authentication.get_user(nil)
   end
 end

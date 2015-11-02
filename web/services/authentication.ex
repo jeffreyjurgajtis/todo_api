@@ -12,4 +12,8 @@ defmodule TodoApi.Authentication do
         {:error, "cannot find user by authentication token"}
     end
   end
+
+  def get_user(_) do
+    {:error, "a valid authentication token is required"}
+  end
 end
