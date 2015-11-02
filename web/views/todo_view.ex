@@ -6,7 +6,7 @@ defmodule TodoApi.TodoView do
   end
 
   def render("show.json", %{todo: todo}) do
-    %{todos: render_one(todo, TodoApi.TodoView, "todo.json")}
+    %{todo: render_one(todo, TodoApi.TodoView, "todo.json")}
   end
 
   def render("todo.json", %{todo: todo}) do

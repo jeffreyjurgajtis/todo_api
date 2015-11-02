@@ -53,4 +53,24 @@ defmodule TodoApi.TodoControllerTest do
 
     assert(response.status == 401)
   end
+
+  test "create returns 201/todo JSON on success", %{conn: conn} do
+    {:ok, user} = insert_user
+    json = conn
+            |> put_req_header("x-auth-token", user.authentication_token)
+            |> post(todo_path(conn, :create), todo: %{content: "content"})
+            |> json_response(201)
+
+    assert(json["todo"])
+  end
+
+  test "create returns 422/error JSON on failure", %{conn: conn} do
+    {:ok, user} = insert_user
+    json = conn
+            |> put_req_header("x-auth-token", user.authentication_token)
+            |> post(todo_path(conn, :create), todo: %{content: ""})
+            |> json_response(422)
+
+    assert(json["errors"])
+  end
 end

@@ -4,6 +4,7 @@ defmodule TodoApi.TodoController do
   alias TodoApi.Authentication
   alias TodoApi.Todo
   alias TodoApi.Repo
+  alias TodoApi.ChangesetView
 
   plug :authenticate_user
 
@@ -12,6 +13,23 @@ defmodule TodoApi.TodoController do
     todos = Repo.all(Todo, user_id: user.id)
 
     render(conn, "index.json", todos: todos)
+  end
+
+  def create(conn, %{"todo" => todo_params}) do
+    user = conn.assigns[:user]
+    params = Map.put(todo_params, "user_id", user.id)
+    changeset = Todo.changeset(%Todo{}, params)
+
+    case Repo.insert(changeset) do
+      {:ok, todo} ->
+        conn
+        |> put_status(:created)
+        |> render("show.json", todo: todo)
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(ChangesetView, "error.json", changeset: changeset)
+    end
   end
 
   defp authenticate_user(conn, _) do
