@@ -1,9 +1,8 @@
 defmodule TodoApi.TodoControllerTest do
   use TodoApi.ConnCase
+  import TodoApi.UserHelper, only: [insert_user: 0]
 
-  alias TodoApi.User
   alias TodoApi.Todo
-  alias TodoApi.Registration
 
   setup do
     conn = conn() |> put_req_header("accept", "application/json")
@@ -44,11 +43,5 @@ defmodule TodoApi.TodoControllerTest do
     response = conn |> get(todo_path(conn, :index))
 
     assert(response.status == 401)
-  end
-
-  defp insert_user do
-    %User{}
-    |> User.changeset(%{email: "email@example.com", password: "password"})
-    |> Registration.create
   end
 end

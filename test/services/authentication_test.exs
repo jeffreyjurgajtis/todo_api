@@ -1,17 +1,11 @@
 defmodule TodoApi.AuthenticationTest do
   use TodoApi.ModelCase
+  import TodoApi.UserHelper, only: [insert_user: 0]
 
-  alias TodoApi.User
-  alias TodoApi.Registration
   alias TodoApi.Authentication
 
-  @user_params %{email: "email@example.com", password: "password"}
-
   test "returns {:ok, user} when a valid token is given" do
-    {:ok, user} = %User{}
-                  |> User.changeset(@user_params)
-                  |> Registration.create
-
+    {:ok, user} = insert_user
     {:ok, result} = Authentication.get_user(user.authentication_token)
 
     assert user.email == result.email
