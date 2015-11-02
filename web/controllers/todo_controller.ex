@@ -20,8 +20,8 @@ defmodule TodoApi.TodoController do
     case Authentication.get_user(authentication_token) do
       {:ok, user} ->
         assign(conn, :user, user)
-      {:error, _message} ->
-        conn |> put_status(401) |> halt
+      {:error, message} ->
+        conn |> put_status(401) |> json(%{error: message}) |> halt
     end
   end
 end

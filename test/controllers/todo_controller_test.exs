@@ -39,6 +39,15 @@ defmodule TodoApi.TodoControllerTest do
     assert(response.status == 401)
   end
 
+  test "index returns error JSON when auth token is invalid", %{conn: conn} do
+    json = conn
+            |> put_req_header("x-auth-token", "invalid-token")
+            |> get(todo_path(conn, :index))
+            |> json_response(401)
+
+    assert(json["error"])
+  end
+
   test "index returns status 401 when auth token is missing", %{conn: conn} do
     response = conn |> get(todo_path(conn, :index))
 
