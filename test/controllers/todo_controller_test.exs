@@ -118,6 +118,18 @@ defmodule TodoApi.TodoControllerTest do
     assert(json["errors"] != %{})
   end
 
+  test "delete returns status 204", %{conn: conn} do
+    {:ok, user} = insert_user
+    todo = insert_todo(user.id)
+
+    response = conn
+            |> put_req_header("x-auth-token", user.authentication_token)
+            |> delete(todo_path(conn, :delete, todo.id))
+
+    assert(response.status == 204)
+    refute(Repo.get(Todo, todo.id))
+  end
+
   defp insert_todo(user_id) do
     %Todo{content: "content", user_id: user_id} |> Repo.insert!
   end

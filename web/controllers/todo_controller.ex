@@ -53,6 +53,14 @@ defmodule TodoApi.TodoController do
     end
   end
 
+  def delete(conn, %{"id" => id}) do
+    user = conn.assigns[:user]
+    todo = Repo.get_by!(Todo, id: id, user_id: user.id)
+    Repo.delete!(todo)
+
+    send_resp(conn, :no_content, "")
+  end
+
   defp authenticate_user(conn, _) do
     authentication_token = conn.req_headers["x-auth-token"]
 
