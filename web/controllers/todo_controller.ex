@@ -32,6 +32,13 @@ defmodule TodoApi.TodoController do
     end
   end
 
+  def show(conn, %{"id" => id}) do
+    user = conn.assigns[:user]
+    todo = Repo.get_by!(Todo, id: id, user_id: user.id)
+
+    render(conn, "show.json", todo: todo)
+  end
+
   defp authenticate_user(conn, _) do
     authentication_token = conn.req_headers["x-auth-token"]
 

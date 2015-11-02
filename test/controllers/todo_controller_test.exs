@@ -73,4 +73,20 @@ defmodule TodoApi.TodoControllerTest do
 
     assert(json["errors"])
   end
+
+  test "show returns 200/todo JSON" do
+    {:ok, user} = insert_user
+    todo = %Todo{content: "content", user_id: user.id} |> Repo.insert!
+
+    json = conn
+            |> put_req_header("x-auth-token", user.authentication_token)
+            |> get(todo_path(conn, :show, todo.id))
+            |> json_response(200)
+
+    assert(json["todo"] == %{
+      "id" => todo.id,
+      "content" => todo.content,
+      "completed_at" => todo.completed_at
+    })
+  end
 end
