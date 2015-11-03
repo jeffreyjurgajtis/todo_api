@@ -18,4 +18,9 @@ defmodule TodoApi.Todo do
     |> validate_length(:content, min: 1)
     |> assoc_constraint(:user)
   end
+
+  def sorted(query \\ __MODULE__) do
+    from t in query,
+    order_by: [asc: t.inserted_at]
+  end
 end

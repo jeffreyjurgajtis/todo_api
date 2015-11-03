@@ -10,7 +10,8 @@ defmodule TodoApi.TodoController do
 
   def index(conn, _params) do
     user = conn.assigns[:user]
-    todos = Repo.all(Todo, user_id: user.id)
+    todos = Todo.sorted
+            |> Repo.all(user_id: user.id)
 
     render(conn, "index.json", todos: todos)
   end
