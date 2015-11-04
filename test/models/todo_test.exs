@@ -25,4 +25,22 @@ defmodule TodoApi.TodoTest do
 
     assert changeset.errors[:user] == "does not exist"
   end
+
+  test "when completed_at is already set and a parseable datetime is passed in" do
+    todo = TodoApi.TodoHelper.insert_completed_todo
+    str  = "2015-11-04T19:37:19.455Z"
+    changeset = Todo.changeset(todo, %{completed_at: str})
+
+    assert changeset.valid?
+    assert :completed_at in Map.keys(changeset.changes)
+  end
+
+  test "when completed_at is already set and a non-parseable datetime is passed in" do
+    todo = TodoApi.TodoHelper.insert_completed_todo
+    str  = "2015-11-04T19:37:19+00:00"
+    changeset = Todo.changeset(todo, %{completed_at: str})
+
+    refute changeset.valid?
+    assert changeset.errors[:completed_at] == "is invalid"
+  end
 end
